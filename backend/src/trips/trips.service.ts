@@ -78,7 +78,7 @@ export async function createTrip(dto: CreateTripDto) {
       vehicleId: dto.vehicleId,
       driverId: dto.driverId,
       cargoWeight: dto.cargoWeight,
-      cargoDescription: dto.cargoDescription,
+      cargoDescription: dto.cargoDescription ?? null,
       plannedDistance: dto.plannedDistance,
       revenueAmount: dto.revenueAmount ?? 0,
       status: TripStatus.Draft,
