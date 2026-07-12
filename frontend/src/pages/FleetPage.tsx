@@ -49,6 +49,7 @@ export function FleetPage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [filterStatus, filterType, search]);
 
   async function handleDelete(id: number) {

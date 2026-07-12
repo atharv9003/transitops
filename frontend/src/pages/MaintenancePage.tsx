@@ -37,6 +37,7 @@ export function MaintenancePage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); getVehicles().then(setVehicles); }, [filterStatus]);
 
   async function handleSubmit(e: React.FormEvent) {

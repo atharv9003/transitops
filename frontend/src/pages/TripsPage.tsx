@@ -43,6 +43,7 @@ export function TripsPage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [filterStatus]);
 
   async function handleDispatch(id: number) {

@@ -54,6 +54,7 @@ export function DriversPage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [filterStatus, search]);
 
   async function handleDelete(id: number) {
