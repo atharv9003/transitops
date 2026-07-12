@@ -10,22 +10,26 @@ async function generateTripCode(): Promise<string> {
 }
 
 export async function getAllTrips(filters: TripFilters = {}) {
+  const andConditions: object[] = [];
+
+  if (filters.status)    andConditions.push({ status: filters.status });
+  if (filters.vehicleId) andConditions.push({ vehicleId: filters.vehicleId });
+  if (filters.driverId)  andConditions.push({ driverId: filters.driverId });
+  if (filters.search) {
+    andConditions.push({
+      OR: [
+        { tripCode:    { contains: filters.search } },
+        { source:      { contains: filters.search } },
+        { destination: { contains: filters.search } },
+      ],
+    });
+  }
+
   return prisma.trip.findMany({
-    where: {
-      ...(filters.status && { status: filters.status }),
-      ...(filters.vehicleId && { vehicleId: filters.vehicleId }),
-      ...(filters.driverId && { driverId: filters.driverId }),
-      ...(filters.search && {
-        OR: [
-          { tripCode: { contains: filters.search } },
-          { source: { contains: filters.search } },
-          { destination: { contains: filters.search } },
-        ],
-      }),
-    },
+    where: andConditions.length ? { AND: andConditions } : {},
     include: {
       vehicle: { select: { regNumber: true, name: true, maxCapacity: true } },
-      driver: { select: { name: true, status: true } },
+      driver:  { select: { name: true, status: true } },
     },
     orderBy: { createdAt: 'desc' },
   });
