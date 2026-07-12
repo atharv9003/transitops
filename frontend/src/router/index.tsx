@@ -19,6 +19,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+function RoleRoute({ roles, children }: { roles: string[]; children: React.ReactNode }) {
+  const role = useAuthStore(s => s.role);
+  if (!role || !roles.includes(role)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return <>{children}</>;
+}
+
 function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-layout">
@@ -42,13 +50,55 @@ export function AppRouter() {
               <Routes>
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/fleet" element={<FleetPage />} />
-                <Route path="/drivers" element={<DriversPage />} />
-                <Route path="/trips" element={<TripsPage />} />
+                <Route
+                  path="/fleet"
+                  element={
+                    <RoleRoute roles={['Fleet Manager', 'Dispatcher', 'Safety Officer']}>
+                      <FleetPage />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/drivers"
+                  element={
+                    <RoleRoute roles={['Fleet Manager', 'Safety Officer']}>
+                      <DriversPage />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/trips"
+                  element={
+                    <RoleRoute roles={['Fleet Manager', 'Dispatcher']}>
+                      <TripsPage />
+                    </RoleRoute>
+                  }
+                />
                 <Route path="/maintenance" element={<MaintenancePage />} />
-                <Route path="/fuel" element={<FuelExpensePage />} />
-                <Route path="/reports" element={<ReportsPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
+                <Route
+                  path="/fuel"
+                  element={
+                    <RoleRoute roles={['Fleet Manager', 'Financial Analyst']}>
+                      <FuelExpensePage />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/reports"
+                  element={
+                    <RoleRoute roles={['Fleet Manager', 'Financial Analyst']}>
+                      <ReportsPage />
+                    </RoleRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <RoleRoute roles={['Fleet Manager']}>
+                      <SettingsPage />
+                    </RoleRoute>
+                  }
+                />
               </Routes>
             </AppShell>
           </ProtectedRoute>

@@ -23,6 +23,20 @@ export function Sidebar() {
 
   const initials = user?.email?.slice(0, 2).toUpperCase() ?? 'U';
 
+  const visibleItems = NAV_ITEMS.filter(item => {
+    if (role === 'Fleet Manager') return true;
+    if (role === 'Dispatcher') {
+      return ['Dashboard', 'Fleet', 'Drivers', 'Trips', 'Maintenance'].includes(item.label);
+    }
+    if (role === 'Safety Officer') {
+      return ['Dashboard', 'Fleet', 'Drivers', 'Maintenance'].includes(item.label);
+    }
+    if (role === 'Financial Analyst') {
+      return ['Dashboard', 'Maintenance', 'Fuel & Expenses', 'Analytics'].includes(item.label);
+    }
+    return false;
+  });
+
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
@@ -31,7 +45,7 @@ export function Sidebar() {
       </div>
 
       <nav className="sidebar-nav">
-        {NAV_ITEMS.map(item => (
+        {visibleItems.map(item => (
           <NavLink
             key={item.to}
             to={item.to}
