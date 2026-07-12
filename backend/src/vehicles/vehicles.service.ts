@@ -61,6 +61,7 @@ export async function addVehicleDocument(
   const updated = [...existing, { ...doc, uploadedAt: new Date().toISOString() }];
   return prisma.vehicle.update({
     where: { id },
-    data: { documents: updated },
+    // JSON.parse(JSON.stringify(...)) converts to a plain value Prisma's JSON field accepts
+    data: { documents: JSON.parse(JSON.stringify(updated)) },
   });
 }

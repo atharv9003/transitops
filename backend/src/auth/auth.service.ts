@@ -58,9 +58,10 @@ export async function loginUser(dto: LoginDto): Promise<AuthResponse> {
     roleId: user.roleId,
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const token = jwt.sign(payload, process.env.JWT_SECRET || 'fallback-secret', {
-    expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as string,
-  });
+    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+  } as any);
 
   return {
     token,
