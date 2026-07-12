@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: transitops-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: Admin@123
+      MYSQL_DATABASE: transitops
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pAdmin@123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: transitops-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: mysql://root:Admin@123@db:3306/transitops
+      JWT_SECRET: supersecret-change-in-prod
+      PORT: 3001
+      UPLOAD_DIR: /app/uploads
+    ports:
+      - "3001:3001"
+    volumes:
+      - uploads_data:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: transitops-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  mysql_data:
+  uploads_data:
