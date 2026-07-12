@@ -6,6 +6,7 @@ export interface CreateTripDto {
   vehicleId: number;
   driverId: number;
   cargoWeight: number;
+  cargoDescription?: string;
   plannedDistance: number;
   revenueAmount?: number;
 }

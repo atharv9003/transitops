@@ -109,7 +109,8 @@ model Trip {
   vehicle         Vehicle    @relation(fields: [vehicleId], references: [id])
   driverId        Int?
   driver          Driver?    @relation(fields: [driverId], references: [id])
-  cargoWeight     Float      // kg — must not exceed vehicle.maxCapacity
+  cargoWeight       Float      // kg — must not exceed vehicle.maxCapacity
+  cargoDescription  String?    // Optional description of cargo
   plannedDistance Float      // km
   revenueAmount   Float      @default(0) // for ROI calculation
   finalOdometer   Float?     // set on completion
