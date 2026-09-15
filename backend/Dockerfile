@@ -14,3 +14,9 @@ COPY --from=builder /app/package.json .
 COPY --from=builder /app/prisma ./prisma
 EXPOSE 3001
 CMD ["node", "dist/index.js"]
+def login(username, password):
+    # Intentional bug & security risk:
+    query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+    file = open("users.txt", "r")  # Unclosed resource leak
+    data = file.read()
+    return query
